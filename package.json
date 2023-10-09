@@ -6,6 +6,7 @@
   "scripts": {
     "test": "ava",
     "test:coverage": "c8 ava",
+    "test:watch": "ava --watch",
     "start": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
   "keywords": [],

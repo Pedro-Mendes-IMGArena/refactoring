@@ -57,8 +57,8 @@ test('calculate statement for a comedy with audience adjustment', (t) => {
     ],
   };
 
-  const result = statement(invoice, plays);
-  console.log(result)
+    const result = statement(invoice, plays);
+    
   t.true(result.includes('Amount owed is $540.00'));
   t.true(result.includes('You earned 6 credits'));
 });

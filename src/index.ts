@@ -11,5 +11,3 @@ const result = statement({
         type: "comedy"
     }
 });
-
-console.log(result);
