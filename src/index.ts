@@ -1,6 +1,6 @@
-import { statement } from "./statement";
+import { statementText } from "./statement";
 
-const result = statement({
+const result = statementText({
     customer: "Customer Names goes here", performances: [{
         audience: 30,
         playID: "comedy"

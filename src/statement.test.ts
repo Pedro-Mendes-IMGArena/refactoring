@@ -1,5 +1,5 @@
 import test from 'ava';
-import { statement } from './statement'; // Replace with the correct path to your module
+import { statementText } from './statement'; // Replace with the correct path to your module
 
 const plays = {
   hamlet: { type: 'tragedy', name: 'Hamlet' },
@@ -16,7 +16,7 @@ test('calculate statement for a tragedy with no audience adjustment', (t) => {
     ],
   };
 
-  const result = statement(invoice, plays);
+  const result = statementText(invoice, plays);
 
   t.true(result.includes('Amount owed is $400.00'));
   t.true(result.includes('You earned 0 credits'));
@@ -30,7 +30,7 @@ test('calculate statement for a tragedy with audience adjustment', (t) => {
     ],
   };
 
-  const result = statement(invoice, plays);
+  const result = statementText(invoice, plays);
   t.true(result.includes('Amount owed is $500.00'));
   t.true(result.includes('You earned 10 credits'));
 });
@@ -43,7 +43,7 @@ test('calculate statement for a comedy with no audience adjustment', (t) => {
     ],
   };
 
-  const result = statement(invoice, plays);
+  const result = statementText(invoice, plays);
 
   t.true(result.includes('Amount owed is $345.00'));
   t.true(result.includes('You earned 3 credits'));
@@ -57,7 +57,7 @@ test('calculate statement for a comedy with audience adjustment', (t) => {
     ],
   };
 
-    const result = statement(invoice, plays);
+    const result = statementText(invoice, plays);
     
   t.true(result.includes('Amount owed is $540.00'));
   t.true(result.includes('You earned 6 credits'));
@@ -71,5 +71,5 @@ test('throw an error for an unknown play type', (t) => {
     ],
   };
 
-  t.throws(() => statement(invoice, plays), { message: 'unknown type: unknown' });
+  t.throws(() => statementText(invoice, plays), { message: 'unknown type: unknown' });
 });

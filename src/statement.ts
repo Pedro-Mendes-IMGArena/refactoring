@@ -8,7 +8,7 @@ import {
 
 export type PlaysMap = Record<string, Play>;
 
-export function statement(invoice: Invoice, plays: PlaysMap) {
+export function statementText(invoice: Invoice, plays: PlaysMap) {
     let result = `Statement for ${invoice.customer}\n`;
     result += createStatementDescription(invoice.performances, plays);
     result += `Amount owed is ${formatMoney(calculateTotalAmountOwed(invoice.performances, plays) / 100)}\n`;
