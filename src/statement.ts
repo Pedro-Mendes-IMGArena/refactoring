@@ -19,20 +19,25 @@ type PlaysMap = Record<string, Play>;
 export function statement(invoice: Invoice, plays: PlaysMap) {
     let result = `Statement for ${invoice.customer}\n`;
     
-    for (let perf of invoice.performances) {
-        const play: Play = plays[perf.playID];
-        // print line for this order
-        result += ` ${play.name}: ${formatMoney(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
-    }
-   
-    
+    const accumulatedPerformanceStatement = printPerformanceStatement(invoice, plays);
+    result += accumulatedPerformanceStatement;
     result += `Amount owed is ${formatMoney(calculateTotalAmountOwed(invoice.performances, plays) / 100)}\n`;
     result += `You earned ${calculateVolumeCredits(invoice.performances, plays)} credits\n`;
     return result;
 }
 
+function printPerformanceStatement(invoice: Invoice, plays: PlaysMap) {
+    let accumulatedPerformanceStatement = '';
+    for (let perf of invoice.performances) {
+        const play: Play = plays[perf.playID];
+        // print line for this order
+        accumulatedPerformanceStatement += ` ${play.name}: ${formatMoney(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
+    }
+    return accumulatedPerformanceStatement;
+}
+
 function calculateVolumeCredits(performances: Invoice['performances'], plays: PlaysMap) {
-    let result: number = 0;
+    let result = 0;
     for (let perf of performances) {
         const play: Play = plays[perf.playID];
         // add volume credits
@@ -53,32 +58,31 @@ function calculateTotalAmountOwed(performances: Invoice['performances'], plays: 
 }
 
  function calculateAmountOwedBy(playType: Play['type'], audience: Performance['audience']) {
-        let result = 0;
-        switch (playType) {
-            case "tragedy":
-                result = 40000;
-                if (audience > 30) {
-                    result += 1000 * (audience - 30);
-                }
-                break;
-            case "comedy":
-                result = 30000;
-                if (audience > 20) {
-                    result += 10000 + 500 * (audience - 20);
-                }
-                result += 300 * audience;
-                break;
-            default:
-                throw new Error(`unknown type: ${playType}`);
-        }
-        return result;
+    let result = 0;
+    switch (playType) {
+        case "tragedy":
+            result = 40000;
+            if (audience > 30) {
+                result += 1000 * (audience - 30);
+            }
+            break;
+        case "comedy":
+            result = 30000;
+            if (audience > 20) {
+                result += 10000 + 500 * (audience - 20);
+            }
+            result += 300 * audience;
+            break;
+        default:
+            throw new Error(`unknown type: ${playType}`);
+    }
+    return result;
  }
     
  function formatMoney(money: number) {
-        return new Intl.NumberFormat("en-US",
-            {
-                style: "currency", currency: "USD",
-                minimumFractionDigits: 2
-            }).format(money);
-    
-    }
+    return new Intl.NumberFormat("en-US",
+        {
+            style: "currency", currency: "USD",
+            minimumFractionDigits: 2
+        }).format(money);
+}
