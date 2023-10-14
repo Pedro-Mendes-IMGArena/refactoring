@@ -25,7 +25,7 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
 
     for (let perf of invoice.performances) {
         const play: Play = plays[perf.playID];
-        let thisAmount = calculateAmountOwedBy(play, 0, perf);
+        let thisAmount = calculateAmountOwedBy(play, perf);
         // add volume credits
         volumeCredits += Math.max(perf.audience - 30, 0);
         // add extra credit for every ten comedy attendees
@@ -38,7 +38,8 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
     result += `You earned ${volumeCredits} credits\n`;
     return result;
 
-    function calculateAmountOwedBy(play: Play, thisAmount: number, perf: { audience: number; playID: string; }) {
+    function calculateAmountOwedBy(play: Play, perf: { audience: number; playID: string; }) {
+        let thisAmount = 0;
         switch (play.type) {
             case "tragedy":
                 thisAmount = 40000;
