@@ -18,16 +18,15 @@ type PlaysMap = Record<string, Play>;
 
 export function statement(invoice: Invoice, plays: PlaysMap) {
     let result = `Statement for ${invoice.customer}\n`;
-    
-    result += printPerformanceStatement(invoice, plays);
+    result += printPerformanceStatement(invoice.performances, plays);
     result += `Amount owed is ${formatMoney(calculateTotalAmountOwed(invoice.performances, plays) / 100)}\n`;
     result += `You earned ${calculateVolumeCredits(invoice.performances, plays)} credits\n`;
     return result;
 }
 
-function printPerformanceStatement(invoice: Invoice, plays: PlaysMap) {
+function printPerformanceStatement(performances: Invoice['performances'], plays: PlaysMap) {
     let accumulatedPerformanceStatement = '';
-    for (let perf of invoice.performances) {
+    for (let perf of performances) {
         const play: Play = plays[perf.playID];
         // print line for this order
         accumulatedPerformanceStatement += ` ${play.name}: ${formatMoney(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
