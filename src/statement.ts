@@ -14,8 +14,9 @@ type Play = {
     name: string;
 }
 
-export function statement(invoice: Invoice, plays: Record<string,Play>) {
-    let totalAmount = 0;
+type PlaysMap = Record<string, Play>;
+
+export function statement(invoice: Invoice, plays: PlaysMap) {
     let volumeCredits = 0;
     let result = `Statement for ${invoice.customer}\n`;
     const format = new Intl.NumberFormat("en-US",
@@ -34,16 +35,15 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
         result += ` ${play.name}: ${format(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
     }
     
-    totalAmount = calculateTotalAmountOwed(invoice.performances, plays);
 
-    result += `Amount owed is ${format(totalAmount / 100)}\n`;
+    result += `Amount owed is ${format(calculateTotalAmountOwed(invoice.performances, plays) / 100)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
 
    
 }
 
-function calculateTotalAmountOwed(performances: Invoice['performances'], plays: Record<string, Play>) {
+function calculateTotalAmountOwed(performances: Invoice['performances'], plays: PlaysMap) {
     let result = 0;
     for (let perf of performances) {
         const play: Play = plays[perf.playID];
