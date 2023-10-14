@@ -34,13 +34,25 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
         result += ` ${play.name}: ${format(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
     }
     
-    totalAmount = calculateTotalAmountOwed(invoice.performances, plays, calculateAmountOwedBy);
+    totalAmount = calculateTotalAmountOwed(invoice.performances, plays);
 
     result += `Amount owed is ${format(totalAmount / 100)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
 
-    function calculateAmountOwedBy(playType: Play['type'], audience: Performance['audience']) {
+   
+}
+
+function calculateTotalAmountOwed(performances: Invoice['performances'], plays: Record<string, Play>) {
+    let result = 0;
+    for (let perf of performances) {
+        const play: Play = plays[perf.playID];
+        result += calculateAmountOwedBy(play.type, perf.audience);
+    }
+    return result;
+}
+
+ function calculateAmountOwedBy(playType: Play['type'], audience: Performance['audience']) {
         let result = 0;
         switch (playType) {
             case "tragedy":
@@ -61,13 +73,3 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
         }
         return result;
     }
-}
-
-function calculateTotalAmountOwed(performances: Invoice['performances'], plays: Record<string, Play>, calculateAmountOwedBy: (playType: Play['type'], audience: Performance['audience']) => number) {
-    let result = 0;
-    for (let perf of performances) {
-        const play: Play = plays[perf.playID];
-        result += calculateAmountOwedBy(play.type, perf.audience);
-    }
-    return result;
-}
