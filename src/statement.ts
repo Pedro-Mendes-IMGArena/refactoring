@@ -25,7 +25,7 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
 
     for (let perf of invoice.performances) {
         const play: Play = plays[perf.playID];
-        let thisAmount = calculateAmountOwedBy(play, perf);
+        let thisAmount = calculateAmountOwedBy(play.type, perf);
         // add volume credits
         volumeCredits += Math.max(perf.audience - 30, 0);
         // add extra credit for every ten comedy attendees
@@ -38,9 +38,9 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
     result += `You earned ${volumeCredits} credits\n`;
     return result;
 
-    function calculateAmountOwedBy(play: Play, perf: { audience: number; playID: string; }) {
+    function calculateAmountOwedBy(playType: Play['type'], perf: { audience: number; playID: string; }) {
         let thisAmount = 0;
-        switch (play.type) {
+        switch (playType) {
             case "tragedy":
                 thisAmount = 40000;
                 if (perf.audience > 30) {
@@ -55,7 +55,7 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
                 thisAmount += 300 * perf.audience;
                 break;
             default:
-                throw new Error(`unknown type: ${play.type}`);
+                throw new Error(`unknown type: ${playType}`);
         }
         return thisAmount;
     }
