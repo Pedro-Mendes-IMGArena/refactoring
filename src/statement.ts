@@ -34,7 +34,7 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
         result += ` ${play.name}: ${format(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
     }
     
-    totalAmount = calculateTotalAmountOwed(invoice, plays, totalAmount, calculateAmountOwedBy);
+    totalAmount = calculateTotalAmountOwed(invoice.performances, plays, calculateAmountOwedBy);
 
     result += `Amount owed is ${format(totalAmount / 100)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
@@ -63,10 +63,11 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
     }
 }
 
-function calculateTotalAmountOwed(invoice: Invoice, plays: Record<string, Play>, totalAmount: number, calculateAmountOwedBy: (playType: Play['type'], audience: Performance['audience']) => number) {
-    for (let perf of invoice.performances) {
+function calculateTotalAmountOwed(performances: Invoice['performances'], plays: Record<string, Play>, calculateAmountOwedBy: (playType: Play['type'], audience: Performance['audience']) => number) {
+    let result = 0;
+    for (let perf of performances) {
         const play: Play = plays[perf.playID];
-        totalAmount += calculateAmountOwedBy(play.type, perf.audience);
+        result += calculateAmountOwedBy(play.type, perf.audience);
     }
-    return totalAmount;
+    return result;
 }
