@@ -27,13 +27,16 @@ export function statement(invoice: Invoice, plays: PlaysMap) {
 
     for (let perf of invoice.performances) {
         const play: Play = plays[perf.playID];
-        // add volume credits
-        volumeCredits += Math.max(perf.audience - 30, 0);
-        // add extra credit for every ten comedy attendees
-        if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
         // print line for this order
         result += ` ${play.name}: ${format(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
     }
+   
+    for (let perf of invoice.performances) {
+        const play: Play = plays[perf.playID];
+        // add volume credits
+        volumeCredits += Math.max(perf.audience - 30, 0);
+        // add extra credit for every ten comedy attendees
+        if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);    }
     
 
     result += `Amount owed is ${format(calculateTotalAmountOwed(invoice.performances, plays) / 100)}\n`;
