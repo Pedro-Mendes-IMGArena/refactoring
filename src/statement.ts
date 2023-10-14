@@ -17,7 +17,7 @@ type Play = {
 type PlaysMap = Record<string, Play>;
 
 export function statement(invoice: Invoice, plays: PlaysMap) {
-    let volumeCredits = 0;
+
     let result = `Statement for ${invoice.customer}\n`;
     const format = new Intl.NumberFormat("en-US",
         {
@@ -31,7 +31,7 @@ export function statement(invoice: Invoice, plays: PlaysMap) {
         result += ` ${play.name}: ${format(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
     }
    
-    volumeCredits = calculateVolumeCredits(invoice, plays, volumeCredits);
+    const volumeCredits = calculateVolumeCredits(invoice, plays);
     
 
     result += `Amount owed is ${format(calculateTotalAmountOwed(invoice.performances, plays) / 100)}\n`;
@@ -41,15 +41,16 @@ export function statement(invoice: Invoice, plays: PlaysMap) {
    
 }
 
-function calculateVolumeCredits(invoice: Invoice, plays: PlaysMap, volumeCredits: number) {
+function calculateVolumeCredits(invoice: Invoice, plays: PlaysMap) {
+    let result: number = 0;
     for (let perf of invoice.performances) {
         const play: Play = plays[perf.playID];
         // add volume credits
-        volumeCredits += Math.max(perf.audience - 30, 0);
+        result += Math.max(perf.audience - 30, 0);
         // add extra credit for every ten comedy attendees
-        if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+        if ("comedy" === play.type) result += Math.floor(perf.audience / 5);
     }
-    return volumeCredits;
+    return result;
 }
 
 function calculateTotalAmountOwed(performances: Invoice['performances'], plays: PlaysMap) {
