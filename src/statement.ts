@@ -1,10 +1,12 @@
 
+type Performance = {
+    audience: number,
+    playID: string
+}
+
 type Invoice = {
     customer: string;
-    performances: Array<{
-        audience: number,
-        playID: string
-    }>
+    performances: Array<Performance>
 }
 
 type Play = {
@@ -38,21 +40,21 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
     result += `You earned ${volumeCredits} credits\n`;
     return result;
 
-    function calculateAmountOwedBy(playType: Play['type'], perf: { audience: number; playID: string; }) {
+    function calculateAmountOwedBy(playType: Play['type'], audience: Performance['audience']) {
         let thisAmount = 0;
         switch (playType) {
             case "tragedy":
                 thisAmount = 40000;
-                if (perf.audience > 30) {
-                    thisAmount += 1000 * (perf.audience - 30);
+                if (audience > 30) {
+                    thisAmount += 1000 * (audience - 30);
                 }
                 break;
             case "comedy":
                 thisAmount = 30000;
-                if (perf.audience > 20) {
-                    thisAmount += 10000 + 500 * (perf.audience - 20);
+                if (audience > 20) {
+                    thisAmount += 10000 + 500 * (audience - 20);
                 }
-                thisAmount += 300 * perf.audience;
+                thisAmount += 300 * audience;
                 break;
             default:
                 throw new Error(`unknown type: ${playType}`);
