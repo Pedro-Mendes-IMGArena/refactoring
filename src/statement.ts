@@ -31,7 +31,7 @@ export function statement(invoice: Invoice, plays: PlaysMap) {
         result += ` ${play.name}: ${format(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
     }
    
-    const volumeCredits = calculateVolumeCredits(invoice, plays);
+    const volumeCredits = calculateVolumeCredits(invoice.performances, plays);
     
 
     result += `Amount owed is ${format(calculateTotalAmountOwed(invoice.performances, plays) / 100)}\n`;
@@ -41,9 +41,9 @@ export function statement(invoice: Invoice, plays: PlaysMap) {
    
 }
 
-function calculateVolumeCredits(invoice: Invoice, plays: PlaysMap) {
+function calculateVolumeCredits(invoice: Invoice['performances'], plays: PlaysMap) {
     let result: number = 0;
-    for (let perf of invoice.performances) {
+    for (let perf of performances) {
         const play: Play = plays[perf.playID];
         // add volume credits
         result += Math.max(perf.audience - 30, 0);
