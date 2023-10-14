@@ -25,13 +25,13 @@ export function statement(invoice: Invoice, plays: PlaysMap) {
 }
 
 function printPerformanceStatement(performances: Invoice['performances'], plays: PlaysMap) {
-    let accumulatedPerformanceStatement = '';
+    let result = '';
     for (let perf of performances) {
         const play: Play = plays[perf.playID];
         // print line for this order
-        accumulatedPerformanceStatement += ` ${play.name}: ${formatMoney(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
+        result += ` ${play.name}: ${formatMoney(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
     }
-    return accumulatedPerformanceStatement;
+    return result;
 }
 
 function calculateVolumeCredits(performances: Invoice['performances'], plays: PlaysMap) {
