@@ -19,7 +19,6 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
     let volumeCredits = 0;
     let result = `Statement for ${invoice.customer}\n`;
     const format = new Intl.NumberFormat("en-US",
-
         {
             style: "currency", currency: "USD",
             minimumFractionDigits: 2
@@ -33,8 +32,13 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
         if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
         // print line for this order
         result += ` ${play.name}: ${format(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
+    }
+    
+    for (let perf of invoice.performances) {
+        const play: Play = plays[perf.playID];
         totalAmount += calculateAmountOwedBy(play.type, perf.audience);
     }
+
     result += `Amount owed is ${format(totalAmount / 100)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
