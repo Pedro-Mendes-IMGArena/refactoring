@@ -19,8 +19,7 @@ type PlaysMap = Record<string, Play>;
 export function statement(invoice: Invoice, plays: PlaysMap) {
     let result = `Statement for ${invoice.customer}\n`;
     
-    const accumulatedPerformanceStatement = printPerformanceStatement(invoice, plays);
-    result += accumulatedPerformanceStatement;
+    result += printPerformanceStatement(invoice, plays);
     result += `Amount owed is ${formatMoney(calculateTotalAmountOwed(invoice.performances, plays) / 100)}\n`;
     result += `You earned ${calculateVolumeCredits(invoice.performances, plays)} credits\n`;
     return result;
