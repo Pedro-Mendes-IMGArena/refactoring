@@ -41,24 +41,24 @@ export function statement(invoice: Invoice, plays: Record<string,Play>) {
     return result;
 
     function calculateAmountOwedBy(playType: Play['type'], audience: Performance['audience']) {
-        let thisAmount = 0;
+        let result = 0;
         switch (playType) {
             case "tragedy":
-                thisAmount = 40000;
+                result = 40000;
                 if (audience > 30) {
-                    thisAmount += 1000 * (audience - 30);
+                    result += 1000 * (audience - 30);
                 }
                 break;
             case "comedy":
-                thisAmount = 30000;
+                result = 30000;
                 if (audience > 20) {
-                    thisAmount += 10000 + 500 * (audience - 20);
+                    result += 10000 + 500 * (audience - 20);
                 }
-                thisAmount += 300 * audience;
+                result += 300 * audience;
                 break;
             default:
                 throw new Error(`unknown type: ${playType}`);
         }
-        return thisAmount;
+        return result;
     }
 }
