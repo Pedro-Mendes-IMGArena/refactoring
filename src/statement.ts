@@ -41,7 +41,7 @@ export function statement(invoice: Invoice, plays: PlaysMap) {
    
 }
 
-function calculateVolumeCredits(invoice: Invoice['performances'], plays: PlaysMap) {
+function calculateVolumeCredits(performances: Invoice['performances'], plays: PlaysMap) {
     let result: number = 0;
     for (let perf of performances) {
         const play: Play = plays[perf.playID];
