@@ -31,12 +31,7 @@ export function statement(invoice: Invoice, plays: PlaysMap) {
         result += ` ${play.name}: ${format(calculateAmountOwedBy(play.type, perf.audience) / 100)} (${perf.audience} seats)\n`;
     }
    
-    for (let perf of invoice.performances) {
-        const play: Play = plays[perf.playID];
-        // add volume credits
-        volumeCredits += Math.max(perf.audience - 30, 0);
-        // add extra credit for every ten comedy attendees
-        if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);    }
+    volumeCredits = calculateVolumeCredits(invoice, plays, volumeCredits);
     
 
     result += `Amount owed is ${format(calculateTotalAmountOwed(invoice.performances, plays) / 100)}\n`;
@@ -44,6 +39,17 @@ export function statement(invoice: Invoice, plays: PlaysMap) {
     return result;
 
    
+}
+
+function calculateVolumeCredits(invoice: Invoice, plays: PlaysMap, volumeCredits: number) {
+    for (let perf of invoice.performances) {
+        const play: Play = plays[perf.playID];
+        // add volume credits
+        volumeCredits += Math.max(perf.audience - 30, 0);
+        // add extra credit for every ten comedy attendees
+        if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    }
+    return volumeCredits;
 }
 
 function calculateTotalAmountOwed(performances: Invoice['performances'], plays: PlaysMap) {
