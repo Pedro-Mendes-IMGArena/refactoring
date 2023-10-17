@@ -1,13 +1,17 @@
+import { plays } from "./plays";
 import { statement } from "./statement";
 
-const result = statement({
-    customer: "Customer Names goes here", performances: [{
+const result = statement(
+  {
+    customer: "IMG Arena",
+    performances: [
+      {
         audience: 30,
-        playID: "comedy"
-    }]
-}, {
-    comedy: {
-        name: "the comedy show",
-        type: "comedy"
-    }
-});
+        playID: "as-like",
+      },
+    ],
+  },
+  plays
+);
+
+console.log(result);
